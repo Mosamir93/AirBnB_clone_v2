@@ -26,13 +26,18 @@ def do_deploy(archive_path):
         tmp_path = "/tmp/"
 
         put(archive_path, tmp_path)
-        run(f"mkdir -p {deploy_path}{folder}/")
-        run(f"tar -xzf {tmp_path}{archive} -C {deploy_path}{folder}/")
-        run(f"rm {tmp_path}{archive}")
-        run(f"mv {deploy_path}{folder}/web_static/* {deploy_path}{folder}/")
-        run(f"rm -rf {deploy_path}{folder}/web_static")
-        run(f"rm -rf /data/web_static/current")
-        run(f"ln -s {deploy_path}{folder}/ /data/web_static/current")
+        run("mkdir -p {}{}/".format(deploy_path, folder))
+        run("tar -xzf {}{} -C {}{}/".format(
+            tmp_path, archive, deploy_path, folder))
+        run("rm {}{}".format(
+            tmp_path, archive))
+        run("mv {}{}/web_static/* {}{}/".format(
+            deploy_path, folder, deploy_path, folder))
+        run("rm -rf {}{}/web_static".format(
+            deploy_path, folder))
+        run("rm -rf /data/web_static/current")
+        run("ln -sf {}{}/ /data/web_static/current".format(
+            deploy_path, folder))
         print("New version deployed!")
         return True
     except Exception:
