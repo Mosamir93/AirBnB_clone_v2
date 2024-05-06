@@ -1,11 +1,9 @@
 #!/usr/bin/python3
+"""Compress web static package
 """
-A Fabric script  that distributes
-an archive to web servers
-"""
-
-from fabric.api import local, run, env, put
-import os.path
+from fabric.api import *
+from datetime import datetime
+from os import path
 
 env.hosts = ['52.87.230.55', '100.25.150.51']
 env.user = 'ubuntu'
@@ -14,31 +12,37 @@ env.key_filename = '~/.ssh/school'
 
 def do_deploy(archive_path):
     """
-    Distributes an archive to web servers
+    Deploy web files to server
     """
-    if os.path.isfile(archive_path) is False:
-        return False
-
     try:
-        archive = archive_path.split('/')[-1]
-        folder = archive.split('.')[0]
-        deploy_path = "/data/web_static/releases/"
-        tmp_path = "/tmp/"
+        if not (path.exists(archive_path)):
+            return False
 
-        put(archive_path, tmp_path)
-        run("mkdir -p {}{}/".format(deploy_path, folder))
-        run("tar -xzf {}{} -C {}{}/".format(
-            tmp_path, archive, deploy_path, folder))
-        run("rm {}{}".format(
-            tmp_path, archive))
-        run("mv {}{}/web_static/* {}{}/".format(
-            deploy_path, folder, deploy_path, folder))
-        run("rm -rf {}{}/web_static".format(
-            deploy_path, folder))
-        run("rm -rf /data/web_static/current")
-        run("ln -sf {}{}/ /data/web_static/current".format(
-            deploy_path, folder))
-        print("New version deployed!")
-        return True
+        put(archive_path, '/tmp/')
+
+        timestamp = archive_path[-18:-4]
+        run('sudo mkdir -p /data/web_static/\
+            releases/web_static_{}/'.format(timestamp))
+
+        run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
+            /data/web_static/releases/web_static_{}/'
+            .format(timestamp, timestamp))
+
+        run('sudo rm /tmp/web_static_{}.tgz'.format(timestamp))
+
+        run('sudo mv /data/web_static/releases/web_static_{}/web_static/* \
+            /data/web_static/releases/web_static_{}/'.format(
+                timestamp, timestamp))
+
+        run('sudo rm -rf /data/web_static/releases/\
+            web_static_{}/web_static'
+            .format(timestamp))
+
+        run('sudo rm -rf /data/web_static/current')
+
+        run('sudo ln -s /data/web_static/releases/\
+            web_static_{}/ /data/web_static/current'.format(timestamp))
     except Exception:
         return False
+
+    return True
