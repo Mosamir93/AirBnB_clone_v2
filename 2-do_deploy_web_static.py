@@ -1,9 +1,5 @@
 #!/usr/bin/python3
-"""
-Fabric script to deploy tgz archive
-fab -f 2-do_deploy_web_static.py do_deploy:archive_path=filepath
-    -i private-key -u user
-"""
+"""Fabric script to deploy tgz archive"""
 
 import os.path
 from fabric.api import *
@@ -12,10 +8,7 @@ env.hosts = ['52.87.230.55', '100.25.150.51']
 
 
 def do_deploy(archive_path):
-    """
-    copies archive file from local to my webservers
-    """
-
+    """copies archive file from local to webservers"""
     if os.path.isfile(archive_path) is False:
         return False
     try:

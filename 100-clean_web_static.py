@@ -1,35 +1,21 @@
 #!/usr/bin/python3
-"""
-Deletes out-of-date archives
-"""
-
 import os
 from fabric.api import *
 
 env.hosts = ['52.87.230.55', '100.25.150.51']
-env.user = 'ubuntu'
-env.key_filename = '~/.ssh/school'
 
 
 def do_clean(number=0):
-    """
-    Delete out-of-date archives.
-    """
-    number = int(number)
-    if number == 0:
-        number = 1
+    """Delete out-of-date archives."""
+    number = 1 if int(number) == 0 else int(number)
 
-    with cd('/data/web_static/releases/'):
-        releases = sorted(run('ls -tr').split())
-        releases = [r for r in releases if r.startswith('web_static_')]
-        deletes = releases[:-number]
-        for release in releases:
-            if release in deletes:
-                run(f"sudo rm -rf {release}")
-
-    local_archs = sorted(os.listdir('versions'))
-    deletes = local_archs[:-number]
+    archives = sorted(os.listdir("versions"))
+    [archives.pop() for i in range(number)]
     with lcd("versions"):
-        for arch in local_archs:
-            if arch in deletes and arch.startswith('web_static_'):
-                local(f"sudo rm {arch}")
+        [local("rm ./{}".format(a)) for a in archives]
+
+    with cd("/data/web_static/releases"):
+        archives = run("ls -tr").split()
+        archives = [a for a in archives if "web_static_" in a]
+        [archives.pop() for i in range(number)]
+        [run("rm -rf ./{}".format(a)) for a in archives]

@@ -61,5 +61,4 @@ def deploy():
     archive = do_pack()
     if archive is None:
         return False
-    res = do_deploy(archive_path=archive)
-    return res
+    return do_deploy(archive_path=archive)
