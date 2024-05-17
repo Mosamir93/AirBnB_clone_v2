@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Delete archives module."""
 import os
 from fabric.api import *
 
