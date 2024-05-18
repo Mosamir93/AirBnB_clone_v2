@@ -10,13 +10,17 @@ import os
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", cascade="all, delete", backref="state")
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", cascade="all, delete", backref="state")
 
-    @property
-    def cities(self):
-        """Getter attribute that returns a list of cities."""
-        from models import storage
-        city_instances = storage.all(City)
-        return [city for city in city_instances.values()
-                if city.state_id == self.id]
+    else:
+        name = ''
+
+        @property
+        def cities(self):
+            """Getter attribute that returns a list of cities."""
+            from models import storage
+            city_instances = storage.all(City)
+            return [city for city in city_instances.values()
+                    if city.state_id == self.id]
