@@ -19,23 +19,19 @@ def teardown_db(exception):
 def states():
     """Display a HTML page with a list of all State objects sorted by name"""
     states = sorted(list(storage.all(State).values()), key=lambda x: x.name)
-    return render_template('9-states.html', states=states, cities=None)
+    return render_template('9-states.html', states=states, state=None)
 
 
 @app.route('/states/<id>', strict_slashes=False)
 def states_id(id):
     """Display a HTML page"""
-    states = storage.all(State).values()
+    states = storage.all(State)
     state = None
-    for x in states:
-        if x.id == id:
-            state = x
-            break
+    key = "state.{}".format(id)
+    if key in states:
+        state = states[key]
     if state:
-        cities = sorted(state.cities, key=lambda x: x.name)
-        return render_template('9-states.html', states=state, cities=cities)
-    else:
-        return render_template('9-states.html', states=None, cities=None)
+        return render_template('9-states.html', states=None, state=state)
 
 
 if __name__ == '__main__':
