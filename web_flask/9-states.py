@@ -25,12 +25,16 @@ def states():
 @app.route('/states/<id>', strict_slashes=False)
 def states_id(id):
     """Display a HTML page"""
-    state = storage.get(State, id)
+    states = storage.all(State).values()
+    for x in states:
+        if x.id == id:
+            state = x
+            break
     if state:
         cities = sorted(state.cities, key=lambda x: x.name)
-        return render_template('9-states.html', states=states, cities=cities)
+        return render_template('9-states.html', states=state, cities=cities)
     else:
-        return render_template('9-states.html', state=None, cities=None)
+        return render_template('9-states.html', states=None, cities=None)
 
 
 if __name__ == '__main__':
