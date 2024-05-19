@@ -7,6 +7,8 @@
 }
 
 article {
+	width: calc(50% - 40px);
+	box-sizing: border-box;
 	display: flex;
 	width: 390px;
 	flex: none;
@@ -35,13 +37,14 @@ article {
 }
 
 .headline h2 {
+	font-size: x-large;
 	text-align: left;
 	float: left;
-	width: 78%;
-	margin-left: 0px;
+	width: 70%;
+	margin-left: 10px;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	flex-grow: 0.2;
+	flex-grow: 0.1;
 	text-size-adjust: inherit;
 	align-items: center;
 }
