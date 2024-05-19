@@ -33,9 +33,11 @@ def states_id(id):
             break
     if state:
         cities = sorted(state.cities, key=lambda x: x.name)
-        return render_template('9-states.html', states=None, state = state, cities=cities)
+        return render_template('9-states.html', states=None,
+                               state=state, cities=cities)
     else:
-        return render_template('9-states.html', states=None, state=None, cities=None)
+        return render_template('9-states.html', states=None,
+                               state=None, cities=None)
 
 
 if __name__ == '__main__':
