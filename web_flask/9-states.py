@@ -26,6 +26,7 @@ def states():
 def states_id(id):
     """Display a HTML page"""
     states = storage.all(State).values()
+    state = None
     for x in states:
         if x.id == id:
             state = x
