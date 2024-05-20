@@ -12,6 +12,9 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         __table_args__ = {'extend_existing': True}
+        id = BaseModel.id
+        created_at = BaseModel.created_at
+        updated_at = BaseModel.updated_at
         name = Column(String(128), nullable=False)
         cities = relationship("City", cascade="all, delete", backref="state")
 
